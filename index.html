@@ -3,33 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Invoice</title>
+    <meta name="description" content="Free online invoice generator tool. Create professional invoices in minutes with our easy-to-use invoice maker.">
+    <meta name="keywords" content="invoice generator, free invoice maker, create invoice online, professional invoice template">
+    <meta name="author" content="Invoice Generator Pro">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://yourdomain.com/invoice-generator">
+    
+    <title>Professional Invoice Generator | Create & Download Free Invoices</title>
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Professional Invoice Generator | Create & Download Free Invoices">
+    <meta property="og:description" content="Free online invoice generator tool. Create professional invoices in minutes with our easy-to-use invoice maker.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/invoice-generator">
+    <meta property="og:image" content="https://yourdomain.com/images/invoice-generator-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- Preload important resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" as="script">
+    
+    <!-- CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
             --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
             --gray-400: #9ca3af;
+            --gray-500: #6b7280;
             --gray-600: #4b5563;
+            --gray-700: #374151;
             --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --black: #000000;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
         }
         
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9fafb;
-            color: var(--gray-800);
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
         
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--gray-900);
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a.active {
+            color: var(--primary);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
         .container {
             max-width: 800px;
-            margin: 2rem auto;
-            background: white;
+            margin: 0 auto;
+            background: var(--white);
             border-radius: 0.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 2rem;
@@ -86,7 +209,7 @@
             border: 1px solid var(--gray-200);
             border-radius: 0.375rem;
             font-size: 0.875rem;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
         
         textarea {
@@ -115,11 +238,13 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background-color: var(--gray-100);
         }
         
         .logo-preview img {
             max-width: 100%;
             max-height: 100%;
+            object-fit: contain;
         }
         
         .upload-btn {
@@ -129,7 +254,7 @@
             border-radius: 0.375rem;
             font-size: 0.875rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
         }
         
         .upload-btn:hover {
@@ -238,10 +363,13 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .btn-cancel {
-            background-color: white;
+            background-color: var(--white);
             border: 1px solid var(--gray-200);
             color: var(--gray-600);
         }
@@ -253,286 +381,641 @@
         .btn-primary {
             background-color: var(--primary);
             border: 1px solid var(--primary);
-            color: white;
+            color: var(--white);
         }
         
         .btn-primary:hover {
-            background-color: var(--primary-light);
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray-200);
         }
         
         .delete-item {
-            color: #ef4444;
+            color: var(--error);
             cursor: pointer;
             font-weight: 500;
+        }
+        
+        /* Preview modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            width: 800px;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--white);
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer-logo-icon {
+            color: var(--primary-light);
+            font-size: 1.5rem;
+        }
+        
+        .footer-about p {
+            color: var(--gray-300);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links h3, .footer-contact h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+        
+        .footer-contact p {
+            color: var(--gray-300);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid var(--gray-700);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray-300);
+            font-size: 0.75rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--gray-300);
+            font-size: 1.25rem;
+            transition: color 0.2s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary-light);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+            
+            nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--white);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                z-index: 99;
+            }
+            
+            nav.active {
+                transform: translateY(0);
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            nav a {
+                padding: 0.5rem;
+                display: block;
+            }
+            
+            nav a.active::after {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .container {
+                padding: 1rem;
+                border-radius: 0;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .modal-content {
+                padding: 1rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            header, footer, .action-buttons {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+        
+        /* Accessibility Improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        [aria-hidden="true"] {
+            display: none;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="invoiceForm">
-        <h1>Create New Invoice</h1>
-        
-        <div class="form-section">
-            <h2>Invoice Details</h2>
-            <div class="form-group">
-                <label>Upload Logo</label>
-                <div class="logo-upload">
-                    <div class="logo-preview" id="logoPreview">
-                        <span>No logo</span>
-                    </div>
-                    <div>
-                        <button type="button" class="upload-btn" id="uploadBtn">Choose File</button>
-                        <input type="file" id="logoInput" accept="image/jpeg,image/png,image/svg+xml" style="display: none;">
-                        <div class="file-info">Supported formats: JPG, PNG, SVG<br>Recommended size: 500px × 500px</div>
-                    </div>
-                </div>
-            </div>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">📄</span>
+                <span>Invoice Generator Pro</span>
+            </a>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Invoice Number</label>
-                    <input type="text" id="invoiceNumber" placeholder="e.g. INV-0001" value="INV-0001">
-                </div>
-                <div class="form-group">
-                    <label>Issue Date</label>
-                    <input type="date" id="issueDate" value="2025-07-04">
-                </div>
-            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                ☰
+            </button>
             
-            <div class="form-row">
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="index.html" class="active">Create Invoice</a></li>
+                    <li><a href="templates.html">Templates</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="container" id="invoiceForm">
+            <h1>Create New Invoice</h1>
+            
+            <div class="form-section">
+                <h2>Invoice Details</h2>
                 <div class="form-group">
-                    <label>Payment Terms</label>
-                    <select id="paymentTerms">
-                        <option value="NET7">NET 7</option>
-                        <option value="NET15">NET 15</option>
-                        <option value="NET30" selected>NET 30</option>
-                        <option value="NET45">NET 45</option>
-                        <option value="NET60">NET 60</option>
-                        <option value="DUE_ON_RECEIPT">Due on receipt</option>
+                    <label for="logoInput">Upload Logo</label>
+                    <div class="logo-upload">
+                        <div class="logo-preview" id="logoPreview">
+                            <span>No logo</span>
+                        </div>
+                        <div>
+                            <button type="button" class="upload-btn" id="uploadBtn">Choose File</button>
+                            <input type="file" id="logoInput" accept="image/jpeg,image/png,image/svg+xml" style="display: none;">
+                            <div class="file-info">Supported formats: JPG, PNG, SVG<br>Recommended size: 500px × 500px</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="invoiceNumber">Invoice Number</label>
+                        <input type="text" id="invoiceNumber" placeholder="e.g. INV-0001" value="INV-0001">
+                    </div>
+                    <div class="form-group">
+                        <label for="issueDate">Issue Date</label>
+                        <input type="date" id="issueDate" value="2025-07-04">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="paymentTerms">Payment Terms</label>
+                        <select id="paymentTerms">
+                            <option value="NET7">NET 7</option>
+                            <option value="NET15">NET 15</option>
+                            <option value="NET30" selected>NET 30</option>
+                            <option value="NET45">NET 45</option>
+                            <option value="NET60">NET 60</option>
+                            <option value="DUE_ON_RECEIPT">Due on receipt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" value="2025-08-03">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="currency">Currency</label>
+                    <select id="currency">
+                        <option value="USD" selected>USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="JPY">JPY (¥)</option>
+                        <option value="CAD">CAD ($)</option>
+                        <option value="AUD">AUD ($)</option>
+                        <option value="CHF">CHF (CHF)</option>
+                        <option value="CNY">CNY (¥)</option>
+                        <option value="HKD">HKD ($)</option>
+                        <option value="NZD">NZD ($)</option>
+                        <option value="SEK">SEK (kr)</option>
+                        <option value="SGD">SGD ($)</option>
+                        <option value="MXN">MXN ($)</option>
+                        <option value="INR">INR (₹)</option>
+                        <option value="BRL">BRL (R$)</option>
+                        <option value="ZAR">ZAR (R)</option>
+                        <option value="RUB">RUB (₽)</option>
+                        <option value="TRY">TRY (₺)</option>
+                        <option value="KRW">KRW (₩)</option>
+                        <option value="AED">AED (د.إ)</option>
                     </select>
                 </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Invoice From</h2>
                 <div class="form-group">
-                    <label>Due Date</label>
-                    <input type="date" id="dueDate" value="2025-08-03">
+                    <label for="businessName">Business Name</label>
+                    <input type="text" id="businessName" placeholder="Your Business Name">
+                </div>
+                <div class="form-group">
+                    <label for="businessAddress">Address</label>
+                    <textarea id="businessAddress" placeholder="Street Address, City, State, ZIP Code"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="businessPhone">Phone</label>
+                        <input type="tel" id="businessPhone" placeholder="+1 (123) 456-7890">
+                    </div>
+                    <div class="form-group">
+                        <label for="businessEmail">Email</label>
+                        <input type="email" id="businessEmail" placeholder="contact@yourbusiness.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="businessTaxId">TAX ID</label>
+                    <input type="text" id="businessTaxId" placeholder="Tax Identification Number">
                 </div>
             </div>
             
-            <div class="form-group">
-                <label>Currency</label>
-                <select id="currency">
-                    <option value="USD" selected>USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="JPY">JPY (¥)</option>
-                    <option value="CAD">CAD ($)</option>
-                    <option value="AUD">AUD ($)</option>
-                    <option value="INR">INR (₹)</option>
-                    <option value="CNY">CNY (¥)</option>
-                    <option value="BRL">BRL (R$)</option>
-                    <option value="MXN">MXN ($)</option>
-                    <option value="SGD">SGD ($)</option>
-                    <option value="HKD">HKD ($)</option>
-                    <option value="NZD">NZD ($)</option>
-                    <option value="SEK">SEK (kr)</option>
-                    <option value="NOK">NOK (kr)</option>
-                    <option value="DKK">DKK (kr)</option>
-                    <option value="CHF">CHF (CHF)</option>
-                    <option value="ZAR">ZAR (R)</option>
-                    <option value="RUB">RUB (₽)</option>
-                    <option value="TRY">TRY (₺)</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h2>Invoice From</h2>
-            <div class="form-group">
-                <label>Business Name</label>
-                <input type="text" id="businessName" placeholder="Your Business Name">
-            </div>
-            <div class="form-group">
-                <label>Address</label>
-                <textarea id="businessAddress" placeholder="Street Address, City, State, ZIP Code"></textarea>
-            </div>
-            <div class="form-row">
+            <div class="form-section">
+                <h2>Invoice To</h2>
                 <div class="form-group">
-                    <label>Phone</label>
-                    <input type="text" id="businessPhone" placeholder="+1 (123) 456-7890">
+                    <label for="clientName">Client Name</label>
+                    <input type="text" id="clientName" placeholder="Client's Name">
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="businessEmail" placeholder="contact@yourbusiness.com">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>TAX ID</label>
-                <input type="text" id="businessTaxId" placeholder="Tax Identification Number">
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h2>Invoice To</h2>
-            <div class="form-group">
-                <label>Client Name</label>
-                <input type="text" id="clientName" placeholder="Client's Name">
-            </div>
-            <div class="form-group">
-                <label>Client Address</label>
-                <textarea id="clientAddress" placeholder="Client's Street Address, City, State, ZIP Code"></textarea>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Client Email</label>
+                    <label for="clientEmail">Client Email</label>
                     <input type="email" id="clientEmail" placeholder="client@example.com">
                 </div>
                 <div class="form-group">
-                    <label>Client Phone</label>
-                    <input type="text" id="clientPhone" placeholder="Client's phone number">
+                    <label for="clientAddress">Client Address</label>
+                    <textarea id="clientAddress" placeholder="Street Address, City, State, ZIP Code"></textarea>
                 </div>
             </div>
-        </div>
-        
-        <div class="form-section">
-            <h2>Items</h2>
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>Item Description</th>
-                        <th width="80px">Qty</th>
-                        <th width="100px">Rate</th>
-                        <th width="120px">Discount</th>
-                        <th width="120px">Amount</th>
-                        <th width="40px"></th>
-                    </tr>
-                </thead>
-                <tbody id="itemsTableBody">
-                    <tr class="item-row">
-                        <td><input type="text" class="item-description" placeholder="Item description" value="Item description"></td>
-                        <td><input type="number" class="item-qty" min="1" value="1"></td>
-                        <td><input type="number" class="item-rate" min="0" step="0.01" value="0"></td>
-                        <td>
-                            <div style="display: flex; gap: 0.25rem;">
-                                <input type="number" class="item-discount" min="0" max="100" value="0" style="flex: 1;">
-                                <select class="item-discount-type" style="width: 40px;">
+            
+            <div class="form-section">
+                <h2>Items</h2>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item Description</th>
+                            <th width="80px">Qty</th>
+                            <th width="100px">Rate</th>
+                            <th width="120px">Discount</th>
+                            <th width="120px">Amount</th>
+                            <th width="40px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody">
+                        <tr class="item-row">
+                            <td><input type="text" class="item-description" placeholder="Item description" value="Item description"></td>
+                            <td><input type="number" class="item-qty" min="1" value="1"></td>
+                            <td><input type="number" class="item-rate" min="0" step="0.01" value="0"></td>
+                            <td>
+                                <div style="display: flex; gap: 0.25rem;">
+                                    <input type="number" class="item-discount" min="0" max="100" value="0" style="flex: 1;">
+                                    <select class="item-discount-type" style="width: 40px;">
+                                        <option value="%">%</option>
+                                        <option value="fixed">$</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="item-amount">$0.00</td>
+                            <td><span class="delete-item" tabindex="0" role="button" aria-label="Delete item">×</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="add-item-btn" id="addItemBtn">
+                    <span>+</span> Add Item
+                </button>
+                
+                <div class="totals-row">
+                    <div class="totals-container">
+                        <div class="total-line">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="total-line">
+                            <div style="display: flex; gap: 0.25rem; align-items: center;">
+                                <span>Discount:</span>
+                                <input type="number" id="overallDiscount" min="0" max="100" value="0" style="width: 50px;">
+                                <select id="overallDiscountType" style="width: 40px;">
                                     <option value="%">%</option>
                                     <option value="fixed">$</option>
                                 </select>
                             </div>
-                        </td>
-                        <td class="item-amount">$0.00</td>
-                        <td><span class="delete-item">×</span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="add-item-btn" id="addItemBtn">
-                <span>+</span> Add Item
-            </button>
+                            <span id="discountAmount">$0.00</span>
+                        </div>
+                        <div class="total-line">
+                            <div style="display: flex; gap: 0.25rem; align-items: center;">
+                                <span>Tax:</span>
+                                <input type="number" id="taxRate" min="0" max="100" value="0" style="width: 50px;">
+                                <span>%</span>
+                            </div>
+                            <span id="taxAmount">$0.00</span>
+                        </div>
+                        <div class="total-line">
+                            <div style="display: flex; gap: 0.25rem; align-items: center;">
+                                <span>Shipping:</span>
+                                <input type="number" id="shipping" min="0" step="0.01" value="0" style="width: 80px;">
+                            </div>
+                            <span id="shippingAmount">$0.00</span>
+                        </div>
+                        <div class="total-line total">
+                            <span>Total:</span>
+                            <span id="totalAmount">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
-            <div class="totals-row">
-                <div class="totals-container">
-                    <div class="total-line">
-                        <span>Subtotal:</span>
-                        <span id="subtotal">$0.00</span>
+            <div class="form-section">
+                <h2>How does this invoice get paid?</h2>
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <input type="checkbox" id="bankTransfer" name="paymentMethod">
+                        <label for="bankTransfer">Bank Transfer</label>
                     </div>
-                    <div class="total-line">
-                        <div style="display: flex; gap: 0.25rem; align-items: center;">
-                            <span>Discount:</span>
-                            <input type="number" id="overallDiscount" min="0" max="100" value="0" style="width: 50px;">
-                            <select id="overallDiscountType" style="width: 40px;">
-                                <option value="%">%</option>
-                                <option value="fixed">$</option>
-                            </select>
-                        </div>
-                        <span id="discountAmount">$0.00</span>
+                    <div class="payment-method">
+                        <input type="checkbox" id="paypal" name="paymentMethod">
+                        <label for="paypal">PayPal</label>
                     </div>
-                    <div class="total-line">
-                        <div style="display: flex; gap: 0.25rem; align-items: center;">
-                            <span>Tax:</span>
-                            <input type="number" id="taxRate" min="0" max="100" value="0" style="width: 50px;">
-                            <span>%</span>
-                        </div>
-                        <span id="taxAmount">$0.00</span>
+                    <div class="payment-method">
+                        <input type="checkbox" id="creditCard" name="paymentMethod">
+                        <label for="creditCard">Credit Card</label>
                     </div>
-                    <div class="total-line">
-                        <div style="display: flex; gap: 0.25rem; align-items: center;">
-                            <span>Shipping:</span>
-                            <input type="number" id="shipping" min="0" step="0.01" value="0" style="width: 80px;">
-                        </div>
-                        <span id="shippingAmount">$0.00</span>
+                    <div class="payment-method">
+                        <input type="checkbox" id="upi" name="paymentMethod">
+                        <label for="upi">UPI</label>
                     </div>
-                    <div class="total-line total">
-                        <span>Total:</span>
-                        <span id="totalAmount">$0.00</span>
+                    <div class="payment-method">
+                        <input type="checkbox" id="paymentLink" name="paymentMethod" checked>
+                        <label for="paymentLink">Payment Link</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="checkbox" id="cash" name="paymentMethod" checked>
+                        <label for="cash">Cash</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="checkbox" id="crypto" name="paymentMethod">
+                        <label for="crypto">Cryptocurrency</label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="checkbox" id="other" name="paymentMethod">
+                        <label for="other">Other</label>
                     </div>
                 </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Notes</h2>
+                <div class="form-group">
+                    <textarea id="notes" placeholder="Notes to be displayed on the invoice"></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cashInstructions">
+                    <label for="cashInstructions">Cash Payment Instructions</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="specialInstructions" placeholder="Do you have any instructions? Please mention">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Terms</h2>
+                <div class="form-group">
+                    <textarea id="terms" placeholder="Terms and conditions for this invoice"></textarea>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-secondary" id="previewBtn">Preview Invoice</button>
+                <button type="button" class="btn btn-primary" id="createInvoiceBtn">Create Invoice</button>
             </div>
         </div>
         
-        <div class="form-section">
-            <h2>How does this invoice get paid?</h2>
-            <div class="payment-methods">
-                <div class="payment-method">
-                    <input type="checkbox" id="bankTransfer" name="paymentMethod">
-                    <label for="bankTransfer">Bank Transfer</label>
+        <!-- Preview Modal -->
+        <div class="modal-overlay" id="previewModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closePreview" aria-label="Close preview">&times;</button>
+                <div id="invoicePreviewContent"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="closePreviewBtn">Close</button>
+                    <button type="button" class="btn btn-primary" id="downloadFromPreviewBtn">Download PDF</button>
                 </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="paypal" name="paymentMethod">
-                    <label for="paypal">PayPal</label>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <a href="index.html" class="footer-logo">
+                    <span class="footer-logo-icon">📄</span>
+                    <span>Invoice Generator Pro</span>
+                </a>
+                <p>Create professional invoices in minutes with our free online invoice generator tool. Perfect for freelancers, small businesses, and enterprises.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><span>📘</span></a>
+                    <a href="#" aria-label="Twitter"><span>🐦</span></a>
+                    <a href="#" aria-label="LinkedIn"><span>🔗</span></a>
+                    <a href="#" aria-label="Instagram"><span>📷</span></a>
                 </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="upi" name="paymentMethod">
-                    <label for="upi">UPI</label>
-                </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="paymentLink" name="paymentMethod" checked>
-                    <label for="paymentLink">Payment Link</label>
-                </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="cash" name="paymentMethod" checked>
-                    <label for="cash">Cash</label>
-                </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="creditCard" name="paymentMethod">
-                    <label for="creditCard">Credit Card</label>
-                </div>
-                <div class="payment-method">
-                    <input type="checkbox" id="crypto" name="paymentMethod">
-                    <label for="crypto">Cryptocurrency</label>
-                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Create Invoice</a></li>
+                    <li><a href="templates.html">Invoice Templates</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="help.html">Help Center</a></li>
+                    <li><a href="tutorials.html">Video Tutorials</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="api.html">API Documentation</a></li>
+                    <li><a href="status.html">System Status</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p><span>📍</span> 123 Business Street, Suite 100<br>San Francisco, CA 94107</p>
+                <p><span>📞</span> +1 (555) 123-4567</p>
+                <p><span>✉️</span> support@invoicegenerator.com</p>
             </div>
         </div>
         
-        <div class="form-section">
-            <h2>Notes</h2>
-            <div class="form-group">
-                <textarea id="notes" placeholder="Notes to be displayed on the invoice"></textarea>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="cashInstructions">
-                <label for="cashInstructions">Cash Payment Instructions</label>
-            </div>
-            <div class="form-group">
-                <input type="text" id="specialInstructions" placeholder="Do you have any instructions? Please mention">
-            </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Invoice Generator Pro. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
         </div>
-        
-        <div class="form-section">
-            <h2>Terms</h2>
-            <div class="form-group">
-                <textarea id="terms" placeholder="Terms and conditions for this invoice"></textarea>
-            </div>
-        </div>
-        
-        <div class="action-buttons">
-            <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
-            <button type="button" class="btn btn-primary" id="createInvoiceBtn">Create Invoice</button>
-        </div>
-    </div>
+    </footer>
 
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         // Initialize jsPDF
         const { jsPDF } = window.jspdf;
         
         // DOM Elements
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
         const uploadBtn = document.getElementById('uploadBtn');
         const logoInput = document.getElementById('logoInput');
         const logoPreview = document.getElementById('logoPreview');
@@ -542,7 +1025,29 @@
         const addItemBtn = document.getElementById('addItemBtn');
         const itemsTableBody = document.getElementById('itemsTableBody');
         const cancelBtn = document.getElementById('cancelBtn');
+        const previewBtn = document.getElementById('previewBtn');
         const createInvoiceBtn = document.getElementById('createInvoiceBtn');
+        const previewModal = document.getElementById('previewModal');
+        const closePreview = document.getElementById('closePreview');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+        const downloadFromPreviewBtn = document.getElementById('downloadFromPreviewBtn');
+        const invoicePreviewContent = document.getElementById('invoicePreviewContent');
+        
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mobileMenuBtn.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    mainNav.classList.remove('active');
+                    mobileMenuBtn.textContent = '☰';
+                }
+            });
+        });
         
         // Handle logo upload
         uploadBtn.addEventListener('click', () => {
@@ -554,7 +1059,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    logoPreview.innerHTML = `<img src="${event.target.result}" alt="Logo">`;
+                    logoPreview.innerHTML = `<img src="${event.target.result}" alt="Company Logo">`;
                 };
                 reader.readAsDataURL(file);
             }
@@ -596,7 +1101,7 @@
                     </div>
                 </td>
                 <td class="item-amount">$0.00</td>
-                <td><span class="delete-item">×</span></td>
+                <td><span class="delete-item" tabindex="0" role="button" aria-label="Delete item">×</span></td>
             `;
             itemsTableBody.appendChild(newRow);
             
@@ -604,9 +1109,19 @@
             addItemEventListeners(newRow);
             
             // Add delete functionality
-            newRow.querySelector('.delete-item').addEventListener('click', () => {
+            const deleteBtn = newRow.querySelector('.delete-item');
+            deleteBtn.addEventListener('click', () => {
                 newRow.remove();
                 calculateTotals();
+            });
+            
+            // Make delete button work with keyboard
+            deleteBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    newRow.remove();
+                    calculateTotals();
+                    e.preventDefault();
+                }
             });
         });
         
@@ -649,9 +1164,19 @@
             addItemEventListeners(row);
             
             // Add delete functionality
-            row.querySelector('.delete-item').addEventListener('click', () => {
+            const deleteBtn = row.querySelector('.delete-item');
+            deleteBtn.addEventListener('click', () => {
                 row.remove();
                 calculateTotals();
+            });
+            
+            // Make delete button work with keyboard
+            deleteBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    row.remove();
+                    calculateTotals();
+                    e.preventDefault();
+                }
             });
         });
         
@@ -707,32 +1232,40 @@
             let symbol = '$';
             
             switch(currency) {
+                case 'USD': symbol = '$'; break;
                 case 'EUR': symbol = '€'; break;
                 case 'GBP': symbol = '£'; break;
                 case 'JPY': symbol = '¥'; break;
-                case 'INR': symbol = '₹'; break;
+                case 'CAD': symbol = '$'; break;
+                case 'AUD': symbol = '$'; break;
+                case 'CHF': symbol = 'CHF'; break;
                 case 'CNY': symbol = '¥'; break;
-                case 'BRL': symbol = 'R$'; break;
-                case 'MXN': symbol = '$'; break;
-                case 'SGD': symbol = '$'; break;
                 case 'HKD': symbol = '$'; break;
                 case 'NZD': symbol = '$'; break;
                 case 'SEK': symbol = 'kr'; break;
-                case 'NOK': symbol = 'kr'; break;
-                case 'DKK': symbol = 'kr'; break;
-                case 'CHF': symbol = 'CHF'; break;
+                case 'SGD': symbol = '$'; break;
+                case 'MXN': symbol = '$'; break;
+                case 'INR': symbol = '₹'; break;
+                case 'BRL': symbol = 'R$'; break;
                 case 'ZAR': symbol = 'R'; break;
                 case 'RUB': symbol = '₽'; break;
                 case 'TRY': symbol = '₺'; break;
-                // Default is USD ($)
+                case 'KRW': symbol = '₩'; break;
+                case 'AED': symbol = 'د.إ'; break;
             }
             
-            // For currencies where symbol comes after the amount
-            if (['SEK', 'NOK', 'DKK'].includes(currency)) {
-                return `${amount.toFixed(2)} ${symbol}`;
+            // Format number with proper decimal places and thousands separators
+            const formattedAmount = new Intl.NumberFormat(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+            
+            // Some currencies put symbol after the amount
+            if (currency === 'RUB' || currency === 'TRY' || currency === 'KRW') {
+                return `${formattedAmount} ${symbol}`;
             }
             
-            return `${symbol}${amount.toFixed(2)}`;
+            return `${symbol}${formattedAmount}`;
         }
         
         // Currency change updates all displayed amounts
@@ -750,26 +1283,100 @@
         // Cancel button
         cancelBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
-                window.location.href = '#';
+                window.location.href = 'index.html';
             }
         });
+        
+        // Preview button
+        previewBtn.addEventListener('click', showPreview);
+        
+        // Close preview modal
+        closePreview.addEventListener('click', hidePreview);
+        closePreviewBtn.addEventListener('click', hidePreview);
+        
+        // Download from preview
+        downloadFromPreviewBtn.addEventListener('click', generatePDF);
+        
+        function hidePreview() {
+            previewModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function showPreview() {
+            // Generate the preview HTML
+            const previewHTML = generateInvoiceHTML();
+            invoicePreviewContent.innerHTML = previewHTML;
+            
+            // Show the modal
+            previewModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Add animation
+            invoicePreviewContent.classList.add('fade-in');
+        }
         
         // Create Invoice button - Generate PDF
         createInvoiceBtn.addEventListener('click', generatePDF);
         
         async function generatePDF() {
-            // Create a temporary div to hold the invoice preview
-            const invoicePreview = document.createElement('div');
-            invoicePreview.style.padding = '20px';
-            invoicePreview.style.maxWidth = '800px';
-            invoicePreview.style.margin = '0 auto';
-            invoicePreview.style.backgroundColor = 'white';
+            // Generate the invoice HTML
+            const invoiceHTML = generateInvoiceHTML();
             
+            // Create a temporary div to hold the invoice preview
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.width = '800px';
+            tempDiv.style.padding = '20px';
+            tempDiv.style.backgroundColor = 'white';
+            tempDiv.innerHTML = invoiceHTML;
+            document.body.appendChild(tempDiv);
+            
+            try {
+                // Use html2canvas to capture the invoice as an image
+                const canvas = await html2canvas(tempDiv, {
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    scrollX: 0,
+                    scrollY: 0
+                });
+                
+                // Create PDF
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                const imgY = 10;
+                
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                
+                // Generate filename
+                const invoiceNumber = document.getElementById('invoiceNumber').value || 'invoice';
+                const cleanFilename = invoiceNumber.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                pdf.save(`${cleanFilename}.pdf`);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('There was an error generating the PDF. Please try again.');
+            } finally {
+                // Remove the temporary div
+                document.body.removeChild(tempDiv);
+            }
+        }
+        
+        // Generate invoice HTML for both preview and PDF
+        function generateInvoiceHTML() {
             // Get the logo if uploaded
             let logoHTML = '';
             const logoImg = logoPreview.querySelector('img');
             if (logoImg) {
-                logoHTML = `<img src="${logoImg.src}" style="max-height: 80px; margin-bottom: 20px;">`;
+                logoHTML = `<img src="${logoImg.src}" style="max-height: 80px; margin-bottom: 20px;" alt="Company Logo">`;
             }
             
             // Format date
@@ -786,12 +1393,12 @@
             });
             
             // Build the invoice HTML
-            invoicePreview.innerHTML = `
-                <div style="font-family: Arial, sans-serif;">
+            return `
+                <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
                     ${logoHTML}
                     <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
                         <div>
-                            <h1 style="margin: 0 0 5px 0; font-size: 24px;">INVOICE</h1>
+                            <h1 style="margin: 0 0 5px 0; font-size: 24px; color: #333;">INVOICE</h1>
                             <p style="margin: 0; color: #666;">${document.getElementById('invoiceNumber').value}</p>
                         </div>
                         <div style="text-align: right;">
@@ -801,21 +1408,20 @@
                         </div>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                        <div style="flex: 1; padding-right: 20px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">FROM</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px; gap: 30px;">
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">FROM</h3>
                             <p style="margin: 0 0 5px 0; font-weight: bold;">${document.getElementById('businessName').value || 'Your Business Name'}</p>
                             <p style="margin: 0 0 5px 0; white-space: pre-line;">${document.getElementById('businessAddress').value || 'Street Address, City, State, ZIP Code'}</p>
                             <p style="margin: 0 0 5px 0;">${document.getElementById('businessPhone').value || 'Phone: '}</p>
                             <p style="margin: 0 0 5px 0;">${document.getElementById('businessEmail').value || 'Email: '}</p>
                             <p style="margin: 0;">${document.getElementById('businessTaxId').value || 'TAX ID: '}</p>
                         </div>
-                        <div style="flex: 1; padding-left: 20px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">TO</h3>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">TO</h3>
                             <p style="margin: 0 0 5px 0; font-weight: bold;">${document.getElementById('clientName').value || 'Client Name'}</p>
                             <p style="margin: 0 0 5px 0; white-space: pre-line;">${document.getElementById('clientAddress').value || 'Client Address'}</p>
                             <p style="margin: 0 0 5px 0;">${document.getElementById('clientEmail').value || 'Email: '}</p>
-                            <p style="margin: 0;">${document.getElementById('clientPhone').value || 'Phone: '}</p>
                         </div>
                     </div>
                     
@@ -884,27 +1490,27 @@
                     </div>
                     
                     <div style="margin-bottom: 30px;">
-                        <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">PAYMENT METHODS</h3>
+                        <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">PAYMENT METHODS</h3>
                         <p style="margin: 0;">${paymentMethods.join(', ')}</p>
                     </div>
                     
                     ${document.getElementById('notes').value ? `
                         <div style="margin-bottom: 30px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">NOTES</h3>
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">NOTES</h3>
                             <p style="margin: 0; white-space: pre-line;">${document.getElementById('notes').value}</p>
                         </div>
                     ` : ''}
                     
                     ${document.getElementById('specialInstructions').value ? `
                         <div style="margin-bottom: 30px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">SPECIAL INSTRUCTIONS</h3>
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">SPECIAL INSTRUCTIONS</h3>
                             <p style="margin: 0; white-space: pre-line;">${document.getElementById('specialInstructions').value}</p>
                         </div>
                     ` : ''}
                     
                     ${document.getElementById('terms').value ? `
                         <div style="margin-bottom: 30px;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">TERMS & CONDITIONS</h3>
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px;">TERMS & CONDITIONS</h3>
                             <p style="margin: 0; white-space: pre-line;">${document.getElementById('terms').value}</p>
                         </div>
                     ` : ''}
@@ -914,44 +1520,25 @@
                     </div>
                 </div>
             `;
-            
-            // Add the preview to the body temporarily
-            document.body.appendChild(invoicePreview);
-            
-            try {
-                // Use html2canvas to capture the invoice as an image
-                const canvas = await html2canvas(invoicePreview, {
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
-                });
-                
-                // Create PDF
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                const imgX = (pdfWidth - imgWidth * ratio) / 2;
-                const imgY = 10;
-                
-                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-                pdf.save(`invoice_${document.getElementById('invoiceNumber').value}.pdf`);
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('There was an error generating the PDF. Please try again.');
-            } finally {
-                // Remove the temporary preview
-                document.body.removeChild(invoicePreview);
-            }
         }
         
         // Initial calculation
         calculateTotals();
+        
+        // Close modal when clicking outside
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                hidePreview();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && previewModal.classList.contains('active')) {
+                hidePreview();
+            }
+        });
     </script>
+    
 </body>
 </html>
