@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: var(--gray-800);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gray-800);
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 1.5rem 0 1rem;
+            color: var(--gray-800);
+        }
+        
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--gray-800);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--gray-600);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .logo-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.375rem;
+            border: 1px dashed var(--gray-400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .upload-btn {
+            background-color: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--gray-200);
+        }
+        
+        .file-info {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            margin-top: 0.5rem;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .items-table th {
+            text-align: left;
+            padding: 0.75rem;
+            background-color: var(--gray-100);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .items-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .items-table input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.25rem;
+        }
+        
+        .add-item-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .totals-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        .totals-container {
+            width: 300px;
+        }
+        
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-line.total {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-cancel {
+            background-color: white;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-600);
+        }
+        
+        .btn-cancel:hover {
+            background-color: var(--gray-100);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: 1px solid var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .delete-item {
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="invoiceForm">
+        <h1>Create New Invoice</h1>
+        
+        <div class="form-section">
+            <h2>Invoice Details</h2>
+            <div class="form-group">
+                <label>Upload Logo</label>
+                <div class="logo-upload">
+                    <div class="logo-preview" id="logoPreview">
+                        <span>No logo</span>
+                    </div>
+                    <div>
+                        <button type="button" class="upload-btn" id="uploadBtn">Choose File</button>
+                        <input type="file" id="logoInput" accept="image/jpeg,image/png,image/svg+xml" style="display: none;">
+                        <div class="file-info">Supported formats: JPG, PNG, SVG<br>Recommended size: 500px × 500px</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Invoice Number</label>
+                    <input type="text" id="invoiceNumber" placeholder="e.g. INV-0001" value="INV-0001">
+                </div>
+                <div class="form-group">
+                    <label>Issue Date</label>
+                    <input type="date" id="issueDate" value="2025-07-04">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Payment Terms</label>
+                    <select id="paymentTerms">
+                        <option value="NET7">NET 7</option>
+                        <option value="NET15">NET 15</option>
+                        <option value="NET30" selected>NET 30</option>
+                        <option value="NET45">NET 45</option>
+                        <option value="NET60">NET 60</option>
+                        <option value="DUE_ON_RECEIPT">Due on receipt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="dueDate" value="2025-08-03">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Currency</label>
+                <select id="currency">
+                    <option value="USD" selected>USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="CAD">CAD ($)</option>
+                    <option value="AUD">AUD ($)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="CNY">CNY (¥)</option>
+                    <option value="BRL">BRL (R$)</option>
+                    <option value="MXN">MXN ($)</option>
+                    <option value="SGD">SGD ($)</option>
+                    <option value="HKD">HKD ($)</option>
+                    <option value="NZD">NZD ($)</option>
+                    <option value="SEK">SEK (kr)</option>
+                    <option value="NOK">NOK (kr)</option>
+                    <option value="DKK">DKK (kr)</option>
+                    <option value="CHF">CHF (CHF)</option>
+                    <option value="ZAR">ZAR (R)</option>
+                    <option value="RUB">RUB (₽)</option>
+                    <option value="TRY">TRY (₺)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Invoice From</h2>
+            <div class="form-group">
+                <label>Business Name</label>
+                <input type="text" id="businessName" placeholder="Your Business Name">
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <textarea id="businessAddress" placeholder="Street Address, City, State, ZIP Code"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="businessPhone" placeholder="+1 (123) 456-7890">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="businessEmail" placeholder="contact@yourbusiness.com">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>TAX ID</label>
+                <input type="text" id="businessTaxId" placeholder="Tax Identification Number">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Invoice To</h2>
+            <div class="form-group">
+                <label>Client Name</label>
+                <input type="text" id="clientName" placeholder="Client's Name">
+            </div>
+            <div class="form-group">
+                <label>Client Address</label>
+                <textarea id="clientAddress" placeholder="Client's Street Address, City, State, ZIP Code"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Client Email</label>
+                    <input type="email" id="clientEmail" placeholder="client@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Client Phone</label>
+                    <input type="text" id="clientPhone" placeholder="Client's phone number">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Items</h2>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <th width="80px">Qty</th>
+                        <th width="100px">Rate</th>
+                        <th width="120px">Discount</th>
+                        <th width="120px">Amount</th>
+                        <th width="40px"></th>
+                    </tr>
+                </thead>
+                <tbody id="itemsTableBody">
+                    <tr class="item-row">
+                        <td><input type="text" class="item-description" placeholder="Item description" value="Item description"></td>
+                        <td><input type="number" class="item-qty" min="1" value="1"></td>
+                        <td><input type="number" class="item-rate" min="0" step="0.01" value="0"></td>
+                        <td>
+                            <div style="display: flex; gap: 0.25rem;">
+                                <input type="number" class="item-discount" min="0" max="100" value="0" style="flex: 1;">
+                                <select class="item-discount-type" style="width: 40px;">
+                                    <option value="%">%</option>
+                                    <option value="fixed">$</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="item-amount">$0.00</td>
+                        <td><span class="delete-item">×</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="add-item-btn" id="addItemBtn">
+                <span>+</span> Add Item
+            </button>
+            
+            <div class="totals-row">
+                <div class="totals-container">
+                    <div class="total-line">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="total-line">
+                        <div style="display: flex; gap: 0.25rem; align-items: center;">
+                            <span>Discount:</span>
+                            <input type="number" id="overallDiscount" min="0" max="100" value="0" style="width: 50px;">
+                            <select id="overallDiscountType" style="width: 40px;">
+                                <option value="%">%</option>
+                                <option value="fixed">$</option>
+                            </select>
+                        </div>
+                        <span id="discountAmount">$0.00</span>
+                    </div>
+                    <div class="total-line">
+                        <div style="display: flex; gap: 0.25rem; align-items: center;">
+                            <span>Tax:</span>
+                            <input type="number" id="taxRate" min="0" max="100" value="0" style="width: 50px;">
+                            <span>%</span>
+                        </div>
+                        <span id="taxAmount">$0.00</span>
+                    </div>
+                    <div class="total-line">
+                        <div style="display: flex; gap: 0.25rem; align-items: center;">
+                            <span>Shipping:</span>
+                            <input type="number" id="shipping" min="0" step="0.01" value="0" style="width: 80px;">
+                        </div>
+                        <span id="shippingAmount">$0.00</span>
+                    </div>
+                    <div class="total-line total">
+                        <span>Total:</span>
+                        <span id="totalAmount">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>How does this invoice get paid?</h2>
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <input type="checkbox" id="bankTransfer" name="paymentMethod">
+                    <label for="bankTransfer">Bank Transfer</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="paypal" name="paymentMethod">
+                    <label for="paypal">PayPal</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="upi" name="paymentMethod">
+                    <label for="upi">UPI</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="paymentLink" name="paymentMethod" checked>
+                    <label for="paymentLink">Payment Link</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="cash" name="paymentMethod" checked>
+                    <label for="cash">Cash</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="creditCard" name="paymentMethod">
+                    <label for="creditCard">Credit Card</label>
+                </div>
+                <div class="payment-method">
+                    <input type="checkbox" id="crypto" name="paymentMethod">
+                    <label for="crypto">Cryptocurrency</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Notes</h2>
+            <div class="form-group">
+                <textarea id="notes" placeholder="Notes to be displayed on the invoice"></textarea>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="cashInstructions">
+                <label for="cashInstructions">Cash Payment Instructions</label>
+            </div>
+            <div class="form-group">
+                <input type="text" id="specialInstructions" placeholder="Do you have any instructions? Please mention">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Terms</h2>
+            <div class="form-group">
+                <textarea id="terms" placeholder="Terms and conditions for this invoice"></textarea>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="createInvoiceBtn">Create Invoice</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        // DOM Elements
+        const uploadBtn = document.getElementById('uploadBtn');
+        const logoInput = document.getElementById('logoInput');
+        const logoPreview = document.getElementById('logoPreview');
+        const paymentTerms = document.getElementById('paymentTerms');
+        const issueDate = document.getElementById('issueDate');
+        const dueDate = document.getElementById('dueDate');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const itemsTableBody = document.getElementById('itemsTableBody');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const createInvoiceBtn = document.getElementById('createInvoiceBtn');
+        
+        // Handle logo upload
+        uploadBtn.addEventListener('click', () => {
+            logoInput.click();
+        });
+        
+        logoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    logoPreview.innerHTML = `<img src="${event.target.result}" alt="Logo">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Auto-calculate due date based on payment terms
+        paymentTerms.addEventListener('change', updateDueDate);
+        issueDate.addEventListener('change', updateDueDate);
+        
+        function updateDueDate() {
+            if (paymentTerms.value === 'DUE_ON_RECEIPT') {
+                dueDate.value = issueDate.value;
+                return;
+            }
+            
+            const days = parseInt(paymentTerms.value.replace('NET', ''));
+            if (!isNaN(days) && issueDate.value) {
+                const date = new Date(issueDate.value);
+                date.setDate(date.getDate() + days);
+                dueDate.value = date.toISOString().split('T')[0];
+            }
+        }
+        
+        // Add new item row
+        addItemBtn.addEventListener('click', () => {
+            const newRow = document.createElement('tr');
+            newRow.className = 'item-row';
+            newRow.innerHTML = `
+                <td><input type="text" class="item-description" placeholder="Item description"></td>
+                <td><input type="number" class="item-qty" min="1" value="1"></td>
+                <td><input type="number" class="item-rate" min="0" step="0.01" value="0"></td>
+                <td>
+                    <div style="display: flex; gap: 0.25rem;">
+                        <input type="number" class="item-discount" min="0" max="100" value="0" style="flex: 1;">
+                        <select class="item-discount-type" style="width: 40px;">
+                            <option value="%">%</option>
+                            <option value="fixed">$</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="item-amount">$0.00</td>
+                <td><span class="delete-item">×</span></td>
+            `;
+            itemsTableBody.appendChild(newRow);
+            
+            // Add event listeners to new inputs
+            addItemEventListeners(newRow);
+            
+            // Add delete functionality
+            newRow.querySelector('.delete-item').addEventListener('click', () => {
+                newRow.remove();
+                calculateTotals();
+            });
+        });
+        
+        // Add event listeners to existing items
+        function addItemEventListeners(row) {
+            const qtyInput = row.querySelector('.item-qty');
+            const rateInput = row.querySelector('.item-rate');
+            const discountInput = row.querySelector('.item-discount');
+            const discountTypeSelect = row.querySelector('.item-discount-type');
+            
+            const calculateItemAmount = () => {
+                const qty = parseFloat(qtyInput.value) || 0;
+                const rate = parseFloat(rateInput.value) || 0;
+                const discount = parseFloat(discountInput.value) || 0;
+                const discountType = discountTypeSelect.value;
+                
+                let subtotal = qty * rate;
+                let discountAmount = 0;
+                
+                if (discountType === '%') {
+                    discountAmount = subtotal * (discount / 100);
+                } else {
+                    discountAmount = discount;
+                }
+                
+                const amount = subtotal - discountAmount;
+                row.querySelector('.item-amount').textContent = formatCurrency(amount);
+                
+                calculateTotals();
+            };
+            
+            qtyInput.addEventListener('input', calculateItemAmount);
+            rateInput.addEventListener('input', calculateItemAmount);
+            discountInput.addEventListener('input', calculateItemAmount);
+            discountTypeSelect.addEventListener('change', calculateItemAmount);
+        }
+        
+        // Initialize event listeners for the first row
+        document.querySelectorAll('.item-row').forEach(row => {
+            addItemEventListeners(row);
+            
+            // Add delete functionality
+            row.querySelector('.delete-item').addEventListener('click', () => {
+                row.remove();
+                calculateTotals();
+            });
+        });
+        
+        // Calculate all totals
+        function calculateTotals() {
+            let subtotal = 0;
+            
+            // Calculate items subtotal
+            document.querySelectorAll('.item-row').forEach(row => {
+                const amountText = row.querySelector('.item-amount').textContent;
+                const amount = parseFloat(amountText.replace(/[^0-9.-]+/g,"")) || 0;
+                subtotal += amount;
+            });
+            
+            // Calculate overall discount
+            const overallDiscount = parseFloat(document.getElementById('overallDiscount').value) || 0;
+            const overallDiscountType = document.getElementById('overallDiscountType').value;
+            let discountAmount = 0;
+            
+            if (overallDiscountType === '%') {
+                discountAmount = subtotal * (overallDiscount / 100);
+            } else {
+                discountAmount = overallDiscount;
+            }
+            
+            // Calculate tax
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const taxAmount = (subtotal - discountAmount) * (taxRate / 100);
+            
+            // Calculate shipping
+            const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+            
+            // Calculate total
+            const total = subtotal - discountAmount + taxAmount + shipping;
+            
+            // Update display
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('discountAmount').textContent = formatCurrency(discountAmount);
+            document.getElementById('taxAmount').textContent = formatCurrency(taxAmount);
+            document.getElementById('shippingAmount').textContent = formatCurrency(shipping);
+            document.getElementById('totalAmount').textContent = formatCurrency(total);
+        }
+        
+        // Add event listeners for overall discount, tax, and shipping
+        document.getElementById('overallDiscount').addEventListener('input', calculateTotals);
+        document.getElementById('overallDiscountType').addEventListener('change', calculateTotals);
+        document.getElementById('taxRate').addEventListener('input', calculateTotals);
+        document.getElementById('shipping').addEventListener('input', calculateTotals);
+        
+        // Format currency
+        function formatCurrency(amount) {
+            const currency = document.getElementById('currency').value;
+            let symbol = '$';
+            
+            switch(currency) {
+                case 'EUR': symbol = '€'; break;
+                case 'GBP': symbol = '£'; break;
+                case 'JPY': symbol = '¥'; break;
+                case 'INR': symbol = '₹'; break;
+                case 'CNY': symbol = '¥'; break;
+                case 'BRL': symbol = 'R$'; break;
+                case 'MXN': symbol = '$'; break;
+                case 'SGD': symbol = '$'; break;
+                case 'HKD': symbol = '$'; break;
+                case 'NZD': symbol = '$'; break;
+                case 'SEK': symbol = 'kr'; break;
+                case 'NOK': symbol = 'kr'; break;
+                case 'DKK': symbol = 'kr'; break;
+                case 'CHF': symbol = 'CHF'; break;
+                case 'ZAR': symbol = 'R'; break;
+                case 'RUB': symbol = '₽'; break;
+                case 'TRY': symbol = '₺'; break;
+                // Default is USD ($)
+            }
+            
+            // For currencies where symbol comes after the amount
+            if (['SEK', 'NOK', 'DKK'].includes(currency)) {
+                return `${amount.toFixed(2)} ${symbol}`;
+            }
+            
+            return `${symbol}${amount.toFixed(2)}`;
+        }
+        
+        // Currency change updates all displayed amounts
+        document.getElementById('currency').addEventListener('change', () => {
+            // Update item amounts
+            document.querySelectorAll('.item-amount').forEach(el => {
+                const amount = parseFloat(el.textContent.replace(/[^0-9.-]+/g,"")) || 0;
+                el.textContent = formatCurrency(amount);
+            });
+            
+            // Update totals
+            calculateTotals();
+        });
+        
+        // Cancel button
+        cancelBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
+                window.location.href = '#';
+            }
+        });
+        
+        // Create Invoice button - Generate PDF
+        createInvoiceBtn.addEventListener('click', generatePDF);
+        
+        async function generatePDF() {
+            // Create a temporary div to hold the invoice preview
+            const invoicePreview = document.createElement('div');
+            invoicePreview.style.padding = '20px';
+            invoicePreview.style.maxWidth = '800px';
+            invoicePreview.style.margin = '0 auto';
+            invoicePreview.style.backgroundColor = 'white';
+            
+            // Get the logo if uploaded
+            let logoHTML = '';
+            const logoImg = logoPreview.querySelector('img');
+            if (logoImg) {
+                logoHTML = `<img src="${logoImg.src}" style="max-height: 80px; margin-bottom: 20px;">`;
+            }
+            
+            // Format date
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+            
+            // Get payment methods
+            const paymentMethods = [];
+            document.querySelectorAll('input[name="paymentMethod"]:checked').forEach(checkbox => {
+                paymentMethods.push(checkbox.nextElementSibling.textContent);
+            });
+            
+            // Build the invoice HTML
+            invoicePreview.innerHTML = `
+                <div style="font-family: Arial, sans-serif;">
+                    ${logoHTML}
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                        <div>
+                            <h1 style="margin: 0 0 5px 0; font-size: 24px;">INVOICE</h1>
+                            <p style="margin: 0; color: #666;">${document.getElementById('invoiceNumber').value}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="margin: 0 0 5px 0;"><strong>Issue Date:</strong> ${formatDate(document.getElementById('issueDate').value)}</p>
+                            <p style="margin: 0 0 5px 0;"><strong>Due Date:</strong> ${formatDate(document.getElementById('dueDate').value)}</p>
+                            <p style="margin: 0;"><strong>Payment Terms:</strong> ${document.getElementById('paymentTerms').selectedOptions[0].text}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                        <div style="flex: 1; padding-right: 20px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">FROM</h3>
+                            <p style="margin: 0 0 5px 0; font-weight: bold;">${document.getElementById('businessName').value || 'Your Business Name'}</p>
+                            <p style="margin: 0 0 5px 0; white-space: pre-line;">${document.getElementById('businessAddress').value || 'Street Address, City, State, ZIP Code'}</p>
+                            <p style="margin: 0 0 5px 0;">${document.getElementById('businessPhone').value || 'Phone: '}</p>
+                            <p style="margin: 0 0 5px 0;">${document.getElementById('businessEmail').value || 'Email: '}</p>
+                            <p style="margin: 0;">${document.getElementById('businessTaxId').value || 'TAX ID: '}</p>
+                        </div>
+                        <div style="flex: 1; padding-left: 20px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">TO</h3>
+                            <p style="margin: 0 0 5px 0; font-weight: bold;">${document.getElementById('clientName').value || 'Client Name'}</p>
+                            <p style="margin: 0 0 5px 0; white-space: pre-line;">${document.getElementById('clientAddress').value || 'Client Address'}</p>
+                            <p style="margin: 0 0 5px 0;">${document.getElementById('clientEmail').value || 'Email: '}</p>
+                            <p style="margin: 0;">${document.getElementById('clientPhone').value || 'Phone: '}</p>
+                        </div>
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                        <thead>
+                            <tr style="background-color: #f5f5f5;">
+                                <th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Item Description</th>
+                                <th style="text-align: right; padding: 10px; border-bottom: 1px solid #ddd; width: 80px;">Qty</th>
+                                <th style="text-align: right; padding: 10px; border-bottom: 1px solid #ddd; width: 100px;">Rate</th>
+                                <th style="text-align: right; padding: 10px; border-bottom: 1px solid #ddd; width: 120px;">Discount</th>
+                                <th style="text-align: right; padding: 10px; border-bottom: 1px solid #ddd; width: 120px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Array.from(document.querySelectorAll('.item-row')).map(row => {
+                                const description = row.querySelector('.item-description').value || 'Item description';
+                                const qty = row.querySelector('.item-qty').value || '1';
+                                const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+                                const discount = parseFloat(row.querySelector('.item-discount').value) || 0;
+                                const discountType = row.querySelector('.item-discount-type').value;
+                                const amountText = row.querySelector('.item-amount').textContent;
+                                
+                                let discountDisplay = discount;
+                                if (discountType === '%') {
+                                    discountDisplay = `${discount}%`;
+                                } else {
+                                    discountDisplay = formatCurrency(discount);
+                                }
+                                
+                                return `
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${description}</td>
+                                        <td style="text-align: right; padding: 10px; border-bottom: 1px solid #eee;">${qty}</td>
+                                        <td style="text-align: right; padding: 10px; border-bottom: 1px solid #eee;">${formatCurrency(rate)}</td>
+                                        <td style="text-align: right; padding: 10px; border-bottom: 1px solid #eee;">${discountDisplay}</td>
+                                        <td style="text-align: right; padding: 10px; border-bottom: 1px solid #eee;">${amountText}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+                        <div style="width: 300px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Subtotal:</span>
+                                <span>${document.getElementById('subtotal').textContent}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Discount:</span>
+                                <span>${document.getElementById('discountAmount').textContent}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Tax:</span>
+                                <span>${document.getElementById('taxAmount').textContent}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Shipping:</span>
+                                <span>${document.getElementById('shippingAmount').textContent}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-weight: bold; font-size: 18px;">
+                                <span>Total:</span>
+                                <span>${document.getElementById('totalAmount').textContent}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">PAYMENT METHODS</h3>
+                        <p style="margin: 0;">${paymentMethods.join(', ')}</p>
+                    </div>
+                    
+                    ${document.getElementById('notes').value ? `
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">NOTES</h3>
+                            <p style="margin: 0; white-space: pre-line;">${document.getElementById('notes').value}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${document.getElementById('specialInstructions').value ? `
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">SPECIAL INSTRUCTIONS</h3>
+                            <p style="margin: 0; white-space: pre-line;">${document.getElementById('specialInstructions').value}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${document.getElementById('terms').value ? `
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px;">TERMS & CONDITIONS</h3>
+                            <p style="margin: 0; white-space: pre-line;">${document.getElementById('terms').value}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="text-align: center; margin-top: 50px; color: #999; font-size: 12px;">
+                        <p>Thank you for your business!</p>
+                    </div>
+                </div>
+            `;
+            
+            // Add the preview to the body temporarily
+            document.body.appendChild(invoicePreview);
+            
+            try {
+                // Use html2canvas to capture the invoice as an image
+                const canvas = await html2canvas(invoicePreview, {
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // Create PDF
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                const imgY = 10;
+                
+                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                pdf.save(`invoice_${document.getElementById('invoiceNumber').value}.pdf`);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('There was an error generating the PDF. Please try again.');
+            } finally {
+                // Remove the temporary preview
+                document.body.removeChild(invoicePreview);
+            }
+        }
+        
+        // Initial calculation
+        calculateTotals();
+    </script>
+</body>
+</html>
